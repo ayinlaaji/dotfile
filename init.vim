@@ -24,24 +24,19 @@ NeoBundleFetch 'Shougo/neobundle.vim'
 "*****************************************************************************
 "" NeoBundle install packages
 "*****************************************************************************''
+"
 NeoBundle 'chriskempson/base16-vim'
-NeoBundle 'rizzatti/dash.vim'
 NeoBundle 'wakatime/vim-wakatime'
 NeoBundle 'junegunn/goyo.vim'
-NeoBundle 'MarcWeber/vim-addon-mw-utils'
 NeoBundle 'w0rp/ale'
 NeoBundle 'tomtom/tlib_vim'
 NeoBundle 'itchyny/lightline.vim'
 NeoBundle 'bronson/vim-trailing-whitespace'  " Right way to handle trailing-whitespace
-NeoBundle 'junegunn/vim-easy-align'         " Align code
 NeoBundle 'rking/ag.vim'
 NeoBundle 'tpope/vim-commentary'
 NeoBundle 'tpope/vim-fugitive'
-NeoBundle 'vim-airline/vim-airline'
-NeoBundle 'vim-airline/vim-airline-themes'
 NeoBundle 'airblade/vim-gitgutter'
 NeoBundle 'vim-scripts/grep.vim'
-NeoBundle 'Raimondi/delimitMate'
 NeoBundle 'majutsushi/tagbar'
 NeoBundle 'Yggdroot/indentLine'
 
@@ -51,6 +46,7 @@ else
     NeoBundle 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --bin' }
     NeoBundle 'junegunn/fzf.vim'
 endif
+
 let g:make = 'gmake'
 if exists('make')
     let g:make = 'make'
@@ -58,21 +54,6 @@ endif
 
 NeoBundle 'Shougo/vimproc.vim', {'do': g:make}
 NeoBundle 'Shougo/denite.nvim'
-
-"" Vim-Session
-NeoBundle 'xolox/vim-misc'
-NeoBundle 'xolox/vim-session'
-
-if v:version >= 703
-    NeoBundle 'Shougo/vimshell.vim'
-endif
-
-if v:version >= 704
-    "" Snippets
-    NeoBundle 'SirVer/ultisnips'
-endif
-
-NeoBundle 'honza/vim-snippets'
 
 "*****************************************************************************
 "" Custom bundles
@@ -85,17 +66,6 @@ NeoBundle 'gorodinskiy/vim-coloresque'
 NeoBundle 'tpope/vim-haml'
 NeoBundle 'mattn/emmet-vim'
 NeoBundle 'tpope/vim-surround'
-
-" javascript
-"" Javascript Bundle
-NeoBundle 'Chiel92/vim-autoformat'
-NeoBundle 'pangloss/vim-javascript'
-"NeoBundle 'shutnik/jshint2.vim'
-NeoBundle 'maksimr/vim-jsbeautify'
-NeoBundle 'einars/js-beautify'
-
-au BufWrite * :Autoformat
-"au BufWrite * :FixWhitespace
 
 " python
 "" Python Bundle
@@ -118,11 +88,6 @@ NeoBundleCheck
 "" Basic Setup
 "*****************************************************************************"
 
-" ###################
-" ### Plugin conf ###
-" ###################
-let jshint2_save = 1
-let jshint2_read = 1
 " ----------------------------
 "       File Management
 " ----------------------------
@@ -134,7 +99,6 @@ set fileencodings=utf-8
 set bomb
 set binary
 
-
 "" Fix backspace indent
 set backspace=indent,eol,start
 
@@ -144,6 +108,7 @@ set softtabstop=0
 set shiftwidth=4
 set expandtab
 set mouse=a
+
 "" Map leader to ,
 let mapleader=','
 
@@ -233,21 +198,6 @@ if exists("*fugitive#statusline")
     set statusline+=%{fugitive#statusline()}
 endif
 
-" vim-airline
-let g:airline#extensions#tabline#enabled = 1
-let g:lightline = {
-            \ 'component': {
-            \   'readonly': '%{&readonly?"⭤":""}',
-            \ },
-            \ 'separator': { 'left': '⮀', 'right': '⮂' },
-            \ 'subseparator': { 'left': '⮁', 'right': '⮃' }
-            \ }
-let g:Powerline_symbols = 'fancy'
-let g:airline#extensions#branch#enabled = 1
-let g:airline#extensions#tabline#enabled = 1
-let g:airline#extensions#tagbar#enabled = 1
-let g:airline_skip_empty_sections = 1
-
 "*****************************************************************************
 "" Abbreviations
 "*****************************************************************************
@@ -268,10 +218,6 @@ nnoremap <silent> <leader>f :Rgrep<CR>
 let Grep_Default_Options = '-IR'
 let Grep_Skip_Files = '*.log *.db'
 let Grep_Skip_Dirs = '.git node_modules'
-
-" vimshell.vim
-let g:vimshell_user_prompt = 'fnamemodify(getcwd(), ":~")'
-let g:vimshell_prompt =  '$ '
 
 " terminal emulation
 if g:vim_bootstrap_editor == 'nvim'
@@ -325,8 +271,6 @@ set autoread
 "" Mappings
 "*****************************************************************************
 
-let jshint2_save = 1
-let jshint2_read = 1
 " ----------------------------
 "       File Management
 " ----------------------------
@@ -460,16 +404,6 @@ nnoremap <Leader>o :.Gbrowse<CR>
 " for html files, 2 spaces
 "autocmd Filetype html setlocal ts=2 sw=2 expandtab
 
-" javascript
-let g:javascript_enable_domhtmlcss = 1
-
-" vim-javascript
-augroup vimrc-javascript
-    autocmd!
-    autocmd FileType javascript set tabstop=4|set shiftwidth=2|set expandtab softtabstop=4
-augroup END
-
-
 " python
 " vim-python
 augroup vimrc-python
@@ -479,25 +413,10 @@ augroup vimrc-python
                 \ cinwords=if,elif,else,for,while,try,except,finally,def,class,with
 augroup END
 
-" jedi-vim
-let g:jedi#popup_on_dot = 0
-let g:jedi#goto_assignments_command = "<leader>g"
-let g:jedi#goto_definitions_command = "<leader>d"
-let g:jedi#documentation_command = "K"
-let g:jedi#usages_command = "<leader>n"
-let g:jedi#rename_command = "<leader>r"
-let g:jedi#show_call_signatures = "0"
-let g:jedi#completions_command = "<C-Space>"
-let g:jedi#smart_auto_mappings = 0
-
-" vim-airline
-let g:airline#extensions#virtualenv#enabled = 1
-
 " Syntax highlight
 " Default highlight is better than polyglot
 let g:polyglot_disabled = ['python']
 let python_highlight_all = 1
-
 
 "*****************************************************************************
 "*****************************************************************************
@@ -511,18 +430,12 @@ endif
 "" Convenience variables
 "*****************************************************************************
 let base16colorspace=256
+"
 " Asynchronous Lint Engine (ALE)
 " Limit linters used for JavaScript.
-let g:ale_linters = {'javascript': ['flow'] }
 
-highlight clear ALEErrorSign " otherwise uses error bg color (typically red)
-highlight clear ALEWarningSign " otherwise uses error bg color (typically red)
-let g:ale_sign_error = 'X' " could use emoji
-let g:ale_sign_warning = '?' " could use emoji
-let g:ale_statusline_format = ['X %d', '? %d', '']
-" %linter% is the name of the linter that provided the message
-" %s is the error or warning message
-let g:ale_echo_msg_format = '%linter% says %s'
-" Map keys to navigate between lines with errors and warnings.
-nnoremap <leader>an :ALENextWrap<cr>
-nnoremap <leader>ap :ALEPreviousWrap<cr>
+let g:ale_fixers = {}
+let g:ale_fixers['javascript'] = ['prettier']
+
+let g:ale_fix_on_save = 1
+let g:ale_javascript_prettier_options = ' --jsx-bracket-same-line'
