@@ -1,11 +1,14 @@
 call plug#begin('~/.vim/plugged')
 
-"*****************************************************************************
-"" Custom bundles
-"*****************************************************************************
+Plug 'ncm2/ncm2'
+Plug 'roxma/nvim-yarp'
+Plug 'ncm2/ncm2-bufword'
+Plug 'ncm2/ncm2-path'
 
 "Jsonnet
 Plug 'google/vim-jsonnet'
+"Auto complete
+Plug 'Valloric/YouCompleteMe'
 
 "Terraform
 Plug 'hashivim/vim-terraform'
@@ -14,84 +17,58 @@ Plug 'juliosueiras/vim-terraform-completion'
 "Dash documentation 
 Plug 'rizzatti/dash.vim'
 
-"Jsonnet
-Plug 'google/vim-jsonnet'
+"Code formating
+Plug 'google/vim-codefmt'
+
+"Typescript
+Plug 'leafgarland/typescript-vim', { 'for': 'typescript' }
 
 "Bazel
 Plug 'google/vim-maktaba'
 Plug 'bazelbuild/vim-bazel'
+Plug 'google/vim-glaive'
 
-" REQUIRED: Add a syntax file. YATS is the best
-Plug 'HerringtonDarkholme/yats.vim'
-Plug 'mhartington/nvim-typescript', {'do': './install.sh'}
+"Prettier"
+Plug 'prettier/vim-prettier', { 'do': 'yarn install' }
 
-Plug 'jason0x43/vim-js-indent'
-
-" For async completion
-Plug 'Shougo/deoplete.nvim'
-
-" For Denite features
-Plug 'Shougo/denite.nvim' , {'do':'UpdateRemotePlugins'}
-
-Plug 'carlitux/deoplete-ternjs', { 'do': 'npm install -g tern' }
-
-" Snippets
-" Track the engine.
+"Snippets
 Plug 'SirVer/ultisnips'
-
-" Snippets are separated from the engine. Add this if you want them:
 Plug 'honza/vim-snippets'
 
-" neosnippet
-Plug 'autozimu/LanguageClient-neovim', {
-           \ 'branch': 'next',
-            \ 'do': 'bash install.sh',
-            \ }
-
-" (Optional) Multi-entry selection UI.
-Plug 'junegunn/fzf'
-Plug 'Shougo/neco-syntax'
-Plug 'zchee/deoplete-jedi'
-
-" For func argument completion
-"Plug 'Shougo/neosnippet'
-"Plug 'Shougo/neosnippet-snippets'
-
-" Time Tracking
+"Time Tracking
 Plug 'wakatime/vim-wakatime'
 
-" Theme
+"Theme
 Plug 'itchyny/lightline.vim'
 Plug 'sonph/onehalf', {'rtp': 'vim/'}
 
-" File search
+"File search
 Plug 'scrooloose/nerdtree'
 Plug 'ctrlpvim/ctrlp.vim'
-
-" Distraction Free Writting
-Plug 'junegunn/goyo.vim'
-
-" Linting and Fixing
-Plug 'w0rp/ale'
 
 "Git
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
 Plug 'airblade/vim-gitgutter'
 
-" Html
-Plug 'hail2u/vim-css3-syntax'
-Plug 'gorodinskiy/vim-coloresque'
-Plug 'tpope/vim-haml'
+"Shortcuts
 Plug 'tpope/vim-surround'
 
-"typesript
-Plug 'leafgarland/typescript-vim', { 'for': 'typescript' }
-
-Plug 'prettier/vim-prettier', { 'do': 'yarn install' }
+"Html
+Plug 'hail2u/vim-css3-syntax'
+Plug 'gorodinskiy/vim-coloresque'
 
 call plug#end()
 
+" enable ncm2 for all buffers
+autocmd BufEnter * call ncm2#enable_for_buffer()
+
+" IMPORTANT: :help Ncm2PopupOpen for more information
+set completeopt=noinsert,menuone,noselect
+
+" NOTE: you need to install completion sources to get completions. Check
+" our wiki page for a list of sources: https://github.com/ncm2/ncm2/wiki
+"
 " ###################
 " ### Plugin conf ###
 " ###################
@@ -110,17 +87,20 @@ colorscheme onehalfdark
 let g:lightline.colorscheme='sublimetext'
 
 " Prettier
-
-
 let g:prettier#autoformat = 0
 let g:prettier#quickfix_auto_focus = 0
-autocmd BufWritePre *.js,*.jsx,*.mjs,*.ts,*.tsx,*.css,*.less,*.scss,*.json,*.graphql,*.md,*.vue,*.yaml,*.html PrettierAsync
 
-" Enable deoplete at startup
-let g:deoplete#omni_patterns = {}
-let g:deoplete#omni_patterns.terraform = '[^ *\t"{=$]\w*'
-let g:deoplete#enable_at_startup = 1
-call deoplete#initialize()
+augroup autoformat_settings
+  autocmd FileType bzl AutoFormatBuffer buildifier
+  autocmd FileType c,cpp,proto AutoFormatBuffer clang-format
+  autocmd FileType dart AutoFormatBuffer dartfmt
+  autocmd FileType go AutoFormatBuffer gofmt
+  autocmd FileType gn AutoFormatBuffer gn
+  autocmd FileType html,css,sass,scss,less,json,javascript,typescript AutoFormatBuffer prettier
+  autocmd FileType java AutoFormatBuffer google-java-format
+  autocmd FileType python AutoFormatBuffer yapf
+  " Alternative: autocmd FileType python AutoFormatBuffer autopep8
+augroup END
 
 "
 " Ultisnip config
@@ -133,23 +113,6 @@ let g:UltiSnipsJumpBackwardTrigger="<c-k>"
 " If you want :UltiSnipsEdit to split your window.
 let g:UltiSnipsEditSplit="vertical"
 let g:UltiSnipsSnippetDirectories = ['~/.vim/UltiSnips', 'UltiSnips']
-
-" Required for operations modifying multiple buffers like rename.
-let g:deoplete#enable_at_startup = 1
-let g:neosnippet#enable_completed_snippet = 1
-
-"Add extra filetypes
-let g:deoplete#sources#ternjs#filetypes = [
-            \ 'jsx',
-            \ 'javascript.jsx',
-            \ 'vue',
-            \ '...'
-            \ ]
-
-let g:LanguageClient_serverCommands = {
-            \ 'javascript': ['javascript-typescript-stdio'],
-            \ 'javascript.jsx': ['tcp://127.0.0.1:2089'],
-            \ }
 
 nnoremap <F5> :call LanguageClient_contextMenu()<CR>
 " Or map each action separately
@@ -164,56 +127,6 @@ let g:ctrlp_custom_ignore = 'node_modules\|DS_Store\|git\|build\|dist\|dist\|bui
 
 let g:cssColorVimDoNotMessMyUpdatetime = 1
 
-
-" Asynchronous Lint Engine (ALE)
-" Limit linters used for JavaScript.
-
-let g:ale_linters = {
-            \'html': ['HTMLHint', 'write-good', 'alex', 'tidy'],
-            \'css': ['prettier'],
-            \'scss': ['prettier'],
-            \'json': ['prettier'],
-            \'python': ['flake8'],
-            \'graphql': ['prettier'],
-            \'javascript': ['eslint'],
-            \'typescript': ['tsserver'],
-            \'yaml': ['yamllint'],
-            \'vim': ['vint'],
-            \'markdown': ['mdl'],
-            \'docker': ['hadolint'],
-            \'terraform': ['fmt'],
-            \}
-
-let g:ale_fixers = {
-            \'css': ['prettier'],
-            \'scss': ['prettier'],
-            \'graphql': ['prettier'],
-            \'javascript': ['prettier'],
-            \'typscript': ['tsserver'],
-            \'json': ['prettier'],
-            \}
-
-highlight clear ALEErrorSign " otherwise uses error bg color (typically red)
-highlight clear ALEWarningSign " otherwise uses error bg color (typically red)
-
-"let g:ale_sign_error = '>>' " could use emoji
-"let g:ale_sign_warning = '--' " could use emoji
-"let g:ale_statusline_format = ['X %d', '? %d', '']
-"let g:ale_sign_column_always = 1
-"let g:ale_completion_enabled = 1
-"
-"let g:ale_fix_on_save = 1
-"let g:ale_javascript_prettier_options = '--write'
-"
-"" %linter% is the name of the linter that provided the message
-"" %s is the error or warning message
-"
-"let g:ale_echo_msg_format = '%linter% says %s'
-"
-"" Map keys to navigate between lines with errors and warnings.
-"nnoremap <leader>an :ALENextWrap<cr>
-"nnoremap <leader>ap :ALEPreviousWrap<cr>
-
 " #####################
 " ### Personal conf ###
 " #####################
@@ -222,48 +135,41 @@ highlight clear ALEWarningSign " otherwise uses error bg color (typically red)
 " This must be first, because it changes other options as a side effect.
 
 "Terraform config
-set nocompatible
-syntax on
 let g:terraform_fmt_on_save=1
 
-"Terraform config end
-
+scriptencoding utf-8
+syntax on
+syntax enable
 filetype plugin indent on
 
-au BufNewFile,BufRead *.ejs set filetype=html
-
-syntax enable
+set nocompatible
 set background=light
 
 " let g:solarized_contrast ='high'
+set fillchars+=stl:\ ,stlnc:\
+set mouse=a
 set noshowmode
 set number
 set relativenumber
-set fillchars+=stl:\ ,stlnc:\
-set mouse=a
 
-set guifont=Inconsolata\ for\ Powerline:h15
 set encoding=utf-8
+set guifont=Inconsolata\ for\ Powerline:h15
 set t_Co=256
 set termencoding=utf-8
 
-scriptencoding utf-8
-
 set backspace=2		        " allow backspacing over everything in insert mode
-set ruler		        " show the cursor position all the time
-
 set hlsearch " highlight searches
-
+set ruler		        " show the cursor position all the time
 set visualbell " no beep
 
 " Tabulation management
-set tabstop=4
-set softtabstop=4
-set expandtab
 set autoindent
-set smartindent
 set cindent
 set cinoptions=(0,u0,U0
+set expandtab
+set smartindent
+set softtabstop=4
+set tabstop=4
 
 " Spellchecking
 if has('spell') " if vim support spell checking
@@ -296,17 +202,19 @@ let g:vim_bootstrap_editor = 'vim'
 " ----------------------------
 
 "" Encoding
+set binary
+set bomb
 set fileencoding=utf-8
 set fileencodings=utf-8
-set bomb
-set binary
 
 "" Fix backspace indent
 set backspace=indent,eol,start
 
 "" Tabs. May be overriten by autocmd rules
-set softtabstop=0
+set expandtab
 set shiftwidth=4
+set softtabstop=0
+set tabstop=4
 
 "" Map leader to ,
 let g:mapleader=','
@@ -315,8 +223,8 @@ let g:mapleader=','
 set hidden
 
 "" Searching
-set incsearch
 set ignorecase
+set incsearch
 set smartcase
 
 "" Directories for swp files
