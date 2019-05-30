@@ -1,99 +1,301 @@
-"*****************************************************************************
-" NeoBundle Scripts-----------------------------
-"*****************************************************************************
-if has('vim_starting')
-    set runtimepath+=~/.config/nvim/bundle/neobundle.vim/
-    set runtimepath+=~/.config/nvim/
-endif
-
-let g:vim_bootstrap_langs = "javascript,python"
-let g:vim_bootstrap_editor = "nvim"             " nvim or vim
-let neobundle_readme=expand('~/.config/nvim/bundle/neobundle.vim/README.md')
-
-if !filereadable(neobundle_readme)
-    echo "Installing NeoBundle..."
-    echo ""
-    silent !mkdir -p ~/.config/nvim/bundle
-    silent !git clone https://github.com/Shougo/neobundle.vim ~/.config/nvim/bundle/neobundle.vim/
-    let g:not_finish_neobundle = "yes"
-endif
-
-call neobundle#begin(expand('$HOME/.config/nvim/bundle'))
-NeoBundleFetch 'Shougo/neobundle.vim'
-
-"*****************************************************************************
-"" NeoBundle install packages
-"*****************************************************************************''
-"
-NeoBundle 'chriskempson/base16-vim'
-NeoBundle 'wakatime/vim-wakatime'
-NeoBundle 'junegunn/goyo.vim'
-NeoBundle 'w0rp/ale'
-NeoBundle 'tomtom/tlib_vim'
-NeoBundle 'itchyny/lightline.vim'
-NeoBundle 'bronson/vim-trailing-whitespace'  " Right way to handle trailing-whitespace
-NeoBundle 'rking/ag.vim'
-NeoBundle 'tpope/vim-commentary'
-NeoBundle 'tpope/vim-fugitive'
-NeoBundle 'airblade/vim-gitgutter'
-NeoBundle 'vim-scripts/grep.vim'
-NeoBundle 'majutsushi/tagbar'
-NeoBundle 'Yggdroot/indentLine'
-
-if isdirectory('/usr/local/opt/fzf')
-    NeoBundle '/usr/local/opt/fzf' | NeoBundle 'junegunn/fzf.vim'
-else
-    NeoBundle 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --bin' }
-    NeoBundle 'junegunn/fzf.vim'
-endif
-
-let g:make = 'gmake'
-if exists('make')
-    let g:make = 'make'
-endif
-
-NeoBundle 'Shougo/vimproc.vim', {'do': g:make}
-NeoBundle 'Shougo/denite.nvim'
+call plug#begin('~/.vim/plugged')
 
 "*****************************************************************************
 "" Custom bundles
 "*****************************************************************************
 
-" html
-"" HTML Bundle
-NeoBundle 'hail2u/vim-css3-syntax'
-NeoBundle 'gorodinskiy/vim-coloresque'
-NeoBundle 'tpope/vim-haml'
-NeoBundle 'mattn/emmet-vim'
-NeoBundle 'tpope/vim-surround'
+"Jsonnet
+Plug 'google/vim-jsonnet'
 
-" python
-"" Python Bundle
-NeoBundle 'davidhalter/jedi-vim'
-NeoBundle 'raimon49/requirements.txt.vim', {'for': 'requirements'}
+"Terraform
+Plug 'hashivim/vim-terraform'
+Plug 'juliosueiras/vim-terraform-completion'
+
+"Dash documentation 
+Plug 'rizzatti/dash.vim'
+
+"Jsonnet
+Plug 'google/vim-jsonnet'
+
+"Bazel
+Plug 'google/vim-maktaba'
+Plug 'bazelbuild/vim-bazel'
+
+" REQUIRED: Add a syntax file. YATS is the best
+Plug 'HerringtonDarkholme/yats.vim'
+Plug 'mhartington/nvim-typescript', {'do': './install.sh'}
+
+Plug 'jason0x43/vim-js-indent'
+
+" For async completion
+Plug 'Shougo/deoplete.nvim'
+
+" For Denite features
+Plug 'Shougo/denite.nvim' , {'do':'UpdateRemotePlugins'}
+
+Plug 'carlitux/deoplete-ternjs', { 'do': 'npm install -g tern' }
+
+" Snippets
+" Track the engine.
+Plug 'SirVer/ultisnips'
+
+" Snippets are separated from the engine. Add this if you want them:
+Plug 'honza/vim-snippets'
+
+" neosnippet
+Plug 'autozimu/LanguageClient-neovim', {
+           \ 'branch': 'next',
+            \ 'do': 'bash install.sh',
+            \ }
+
+" (Optional) Multi-entry selection UI.
+Plug 'junegunn/fzf'
+Plug 'Shougo/neco-syntax'
+Plug 'zchee/deoplete-jedi'
+
+" For func argument completion
+"Plug 'Shougo/neosnippet'
+"Plug 'Shougo/neosnippet-snippets'
+
+" Time Tracking
+Plug 'wakatime/vim-wakatime'
+
+" Theme
+Plug 'itchyny/lightline.vim'
+Plug 'sonph/onehalf', {'rtp': 'vim/'}
+
+" File search
+Plug 'scrooloose/nerdtree'
+Plug 'ctrlpvim/ctrlp.vim'
+
+" Distraction Free Writting
+Plug 'junegunn/goyo.vim'
+
+" Linting and Fixing
+Plug 'w0rp/ale'
+
+"Git
+Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-fugitive'
+Plug 'airblade/vim-gitgutter'
+
+" Html
+Plug 'hail2u/vim-css3-syntax'
+Plug 'gorodinskiy/vim-coloresque'
+Plug 'tpope/vim-haml'
+Plug 'tpope/vim-surround'
+
+"typesript
+Plug 'leafgarland/typescript-vim', { 'for': 'typescript' }
+
+Plug 'prettier/vim-prettier', { 'do': 'yarn install' }
+
+call plug#end()
+
+" ###################
+" ### Plugin conf ###
+" ###################
+
+let g:lightline = {
+      \ 'colorscheme': 'wombat',
+      \ 'active': {
+      \   'left': [ [ 'mode', 'paste' ],
+      \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
+      \ },
+      \ 'component_function': {
+      \   'gitbranch': 'fugitive#head'
+      \ },
+      \ }
+colorscheme onehalfdark
+let g:lightline.colorscheme='sublimetext'
+
+" Prettier
 
 
-"*****************************************************************************
-"*****************************************************************************
+let g:prettier#autoformat = 0
+let g:prettier#quickfix_auto_focus = 0
+autocmd BufWritePre *.js,*.jsx,*.mjs,*.ts,*.tsx,*.css,*.less,*.scss,*.json,*.graphql,*.md,*.vue,*.yaml,*.html PrettierAsync
 
-call neobundle#end()
+" Enable deoplete at startup
+let g:deoplete#omni_patterns = {}
+let g:deoplete#omni_patterns.terraform = '[^ *\t"{=$]\w*'
+let g:deoplete#enable_at_startup = 1
+call deoplete#initialize()
+
+"
+" Ultisnip config
+" Trigger configuration. Do not use <tab> if you use https://github.com/Valloric/YouCompleteMe.
+"
+let g:UltiSnipsExpandTrigger="<tab>"
+let g:UltiSnipsJumpForwardTrigger="<c-j>"
+let g:UltiSnipsJumpBackwardTrigger="<c-k>"
+
+" If you want :UltiSnipsEdit to split your window.
+let g:UltiSnipsEditSplit="vertical"
+let g:UltiSnipsSnippetDirectories = ['~/.vim/UltiSnips', 'UltiSnips']
+
+" Required for operations modifying multiple buffers like rename.
+let g:deoplete#enable_at_startup = 1
+let g:neosnippet#enable_completed_snippet = 1
+
+"Add extra filetypes
+let g:deoplete#sources#ternjs#filetypes = [
+            \ 'jsx',
+            \ 'javascript.jsx',
+            \ 'vue',
+            \ '...'
+            \ ]
+
+let g:LanguageClient_serverCommands = {
+            \ 'javascript': ['javascript-typescript-stdio'],
+            \ 'javascript.jsx': ['tcp://127.0.0.1:2089'],
+            \ }
+
+nnoremap <F5> :call LanguageClient_contextMenu()<CR>
+" Or map each action separately
+nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
+nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
+nnoremap <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
+
+
+" Ctrl P
+let g:ctrlp_map = '<space><space>'
+let g:ctrlp_custom_ignore = 'node_modules\|DS_Store\|git\|build\|dist\|dist\|build\'
+
+let g:cssColorVimDoNotMessMyUpdatetime = 1
+
+
+" Asynchronous Lint Engine (ALE)
+" Limit linters used for JavaScript.
+
+let g:ale_linters = {
+            \'html': ['HTMLHint', 'write-good', 'alex', 'tidy'],
+            \'css': ['prettier'],
+            \'scss': ['prettier'],
+            \'json': ['prettier'],
+            \'python': ['flake8'],
+            \'graphql': ['prettier'],
+            \'javascript': ['eslint'],
+            \'typescript': ['tsserver'],
+            \'yaml': ['yamllint'],
+            \'vim': ['vint'],
+            \'markdown': ['mdl'],
+            \'docker': ['hadolint'],
+            \'terraform': ['fmt'],
+            \}
+
+let g:ale_fixers = {
+            \'css': ['prettier'],
+            \'scss': ['prettier'],
+            \'graphql': ['prettier'],
+            \'javascript': ['prettier'],
+            \'typscript': ['tsserver'],
+            \'json': ['prettier'],
+            \}
+
+highlight clear ALEErrorSign " otherwise uses error bg color (typically red)
+highlight clear ALEWarningSign " otherwise uses error bg color (typically red)
+
+"let g:ale_sign_error = '>>' " could use emoji
+"let g:ale_sign_warning = '--' " could use emoji
+"let g:ale_statusline_format = ['X %d', '? %d', '']
+"let g:ale_sign_column_always = 1
+"let g:ale_completion_enabled = 1
+"
+"let g:ale_fix_on_save = 1
+"let g:ale_javascript_prettier_options = '--write'
+"
+"" %linter% is the name of the linter that provided the message
+"" %s is the error or warning message
+"
+"let g:ale_echo_msg_format = '%linter% says %s'
+"
+"" Map keys to navigate between lines with errors and warnings.
+"nnoremap <leader>an :ALENextWrap<cr>
+"nnoremap <leader>ap :ALEPreviousWrap<cr>
+
+" #####################
+" ### Personal conf ###
+" #####################
+
+" Use Vim settings, rather then Vi settings (much better!).
+" This must be first, because it changes other options as a side effect.
+
+"Terraform config
+set nocompatible
+syntax on
+let g:terraform_fmt_on_save=1
+
+"Terraform config end
+
 filetype plugin indent on
 
-" If there are uninstalled bundles found on startup,
-" this will conveniently prompt you to install them.
-NeoBundleCheck
-"End NeoBundle Scripts-------------------------
+au BufNewFile,BufRead *.ejs set filetype=html
 
-"*****************************************************************************
-"" Basic Setup
-"*****************************************************************************"
+syntax enable
+set background=light
+
+" let g:solarized_contrast ='high'
+set noshowmode
+set number
+set relativenumber
+set fillchars+=stl:\ ,stlnc:\
+set mouse=a
+
+set guifont=Inconsolata\ for\ Powerline:h15
+set encoding=utf-8
+set t_Co=256
+set termencoding=utf-8
+
+scriptencoding utf-8
+
+set backspace=2		        " allow backspacing over everything in insert mode
+set ruler		        " show the cursor position all the time
+
+set hlsearch " highlight searches
+
+set visualbell " no beep
+
+" Tabulation management
+set tabstop=4
+set softtabstop=4
+set expandtab
+set autoindent
+set smartindent
+set cindent
+set cinoptions=(0,u0,U0
+
+" Spellchecking
+if has('spell') " if vim support spell checking
+    " Download dictionaries automatically
+    if !filewritable($HOME.'/.vim/spell')
+        call mkdir($HOME.'/.vim/spell','p')
+    endif
+    set spellsuggest=10 " z= will show suggestions (10 at most)
+    " spell checking for text, HTML, LaTeX, markdown and literate Haskell
+    autocmd BufEnter *.txt,*.tex,*.html,*.md,*.ymd,*.lhs setlocal spell
+    autocmd BufEnter *.txt,*.tex,*.html,*.md,*.ymd,*.lhs setlocal spelllang=fr,en
+    " better error highlighting with solarized
+    highlight clear SpellBad
+    highlight SpellBad term=standout ctermfg=2 term=underline cterm=underline
+    highlight clear SpellCap
+    highlight SpellCap term=underline cterm=underline
+    highlight clear SpellRare
+    highlight SpellRare term=underline cterm=underline
+    highlight clear SpellLocal
+    highlight SpellLocal term=underline cterm=underline
+endif
+
+" -- vim-pandoc folding
+let g:pandoc#modules#disabled = ['folding']
+let g:vim_bootstrap_langs = 'javascript,python'
+let g:vim_bootstrap_editor = 'vim'
 
 " ----------------------------
 "       File Management
 " ----------------------------
 
 "" Encoding
-set encoding=utf-8
 set fileencoding=utf-8
 set fileencodings=utf-8
 set bomb
@@ -103,20 +305,16 @@ set binary
 set backspace=indent,eol,start
 
 "" Tabs. May be overriten by autocmd rules
-set tabstop=4
 set softtabstop=0
 set shiftwidth=4
-set expandtab
-set mouse=a
 
 "" Map leader to ,
-let mapleader=','
+let g:mapleader=','
 
 "" Enable hidden buffers
 set hidden
 
 "" Searching
-set hlsearch
 set incsearch
 set ignorecase
 set smartcase
@@ -134,69 +332,10 @@ else
     set shell=/bin/sh
 endif
 
-" session management
-let g:session_directory = "~/.config/nvim/session"
-let g:session_autoload = "no"
-let g:session_autosave = "no"
-let g:session_command_aliases = 1
-
-"*****************************************************************************
-"" Visual Settings
-"*****************************************************************************
-syntax on
-set ruler
-set number
-set rnu
-vnoremap <silent> <Enter> :EasyAlign<cr>
-
-let no_buffers_menu=1
-
-set mousemodel=popup
-set t_Co=256
-set guioptions=egmrti
-set gfn=Monospace\ 10
-
-if has("gui_running")
-    if has("gui_mac") || has("gui_macvim")
-        set guifont=Menlo:h12
-        set transparency=7
-    endif
-else
-    let g:CSApprox_loaded = 1
-
-    " IndentLine
-    let g:indentLine_enabled = 1
-    let g:indentLine_concealcursor = 0
-    let g:indentLine_char = '┆'
-    let g:indentLine_faster = 1
-
-endif
-
-"" Disable the blinking cursor.
-set gcr=a:blinkon0
-set scrolloff=3
-
-"" Status bar
-set laststatus=2
-
-"" Use modeline overrides
-set modeline
-set modelines=10
-
-set title
-set titleold="Terminal"
-set titlestring=%F
-
-set statusline=%F%m%r%h%w%=(%{&ff}/%Y)\ (line\ %l\/%L,\ col\ %c)\
-
-" Search mappings: These will make it so that going to the next one in a
-" search will center on the line it's found in.
-nnoremap n nzzzv
-nnoremap N Nzzzv
-
-if exists("*fugitive#statusline")
+if exists('*fugitive#statusline')
     set statusline+=%{fugitive#statusline()}
 endif
+
 
 "*****************************************************************************
 "" Abbreviations
@@ -215,16 +354,9 @@ cnoreabbrev Qall qall
 
 " grep.vim
 nnoremap <silent> <leader>f :Rgrep<CR>
-let Grep_Default_Options = '-IR'
-let Grep_Skip_Files = '*.log *.db'
-let Grep_Skip_Dirs = '.git node_modules'
-
-" terminal emulation
-if g:vim_bootstrap_editor == 'nvim'
-    nnoremap <silent> <leader>sh :terminal<CR>
-else
-    nnoremap <silent> <leader>sh :VimShellCreate<CR>
-endif
+let g:Grep_Default_Options = '-IR'
+let g:Grep_Skip_Files = '*.log *.db'
+let g:Grep_Skip_Dirs = '.git node_modules'
 
 "*****************************************************************************
 "" Functions
@@ -232,40 +364,10 @@ endif
 if !exists('*s:setupWrapping')
     function s:setupWrapping()
         set wrap
-        set wm=2
+        set wrapmargin=2
         set textwidth=79
     endfunction
 endif
-
-"*****************************************************************************
-"" Autocmd Rules
-"*****************************************************************************
-"" The PC is fast enough, do syntax highlight syncing from start unless 200 lines
-augroup vimrc-sync-fromstart
-    autocmd!
-    autocmd BufEnter * :syntax sync maxlines=200
-augroup END
-
-"" Remember cursor position
-augroup vimrc-remember-cursor-position
-    autocmd!
-    autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
-augroup END
-
-"" txt
-augroup vimrc-wrapping
-    autocmd!
-    autocmd BufRead,BufNewFile *.txt call s:setupWrapping()
-augroup END
-
-"" make/cmake
-augroup vimrc-make-cmake
-    autocmd!
-    autocmd FileType make setlocal noexpandtab
-    autocmd BufNewFile,BufRead CMakeLists.txt setlocal filetype=cmake
-augroup END
-
-set autoread
 
 "*****************************************************************************
 "" Mappings
@@ -275,7 +377,6 @@ set autoread
 "       File Management
 " ----------------------------
 " search a file in the filetree
-nnoremap <space><space> :split<cr> :<C-u>Denite file_rec<cr>
 
 inoremap jk <Esc>
 
@@ -283,64 +384,10 @@ inoremap jk <Esc>
 noremap <Leader>h :<C-u>split<CR>
 noremap <Leader>v :<C-u>vsplit<CR>
 
-"" Git
-noremap <Leader>ga :Gwrite<CR>
-noremap <Leader>gc :Gcommit<CR>
-noremap <Leader>gsh :Gpush<CR>
-noremap <Leader>gll :Gpull<CR>
-noremap <Leader>gs :Gstatus<CR>
-noremap <Leader>gb :Gblame<CR>
-noremap <Leader>gd :Gvdiff<CR>
-noremap <Leader>gr :Gremove<CR>
-
-" session management
-nnoremap <leader>so :OpenSession<Space>
-nnoremap <leader>ss :SaveSession<Space>
-nnoremap <leader>sd :DeleteSession<CR>
-nnoremap <leader>sc :CloseSession<CR>
-
 "" Tabs
 nnoremap <Tab> gt
 nnoremap <S-Tab> gT
 nnoremap <silent> <S-t> :tabnew<CR>
-
-"" Set working directory
-nnoremap <leader>. :lcd %:p:h<CR>
-
-"" Opens an edit command with the path of the currently edited file filled in
-noremap <Leader>e :e <C-R>=expand("%:p:h") . "/" <CR>
-
-"" Opens a tab edit command with the path of the currently edited file filled
-noremap <Leader>te :tabe <C-R>=expand("%:p:h") . "/" <CR>
-
-
-"" fzf.vim
-set wildmode=list:longest,list:full
-set wildignore+=*.o,*.obj,.git,*.rbc,*.pyc,__pycache__
-let $FZF_DEFAULT_COMMAND =  "find * -path '*/\.*' -prune -o -path 'node_modules/**' -prune -o -path 'target/**' -prune -o -path 'dist/**' -prune -o  -type f -print -o -type l -print 2> /dev/null"
-
-" The Silver Searcher
-if executable('ag')
-    let $FZF_DEFAULT_COMMAND = 'ag --hidden --ignore .git -g ""'
-    set grepprg=ag\ --nogroup\ --nocolor
-endif
-
-" ripgrep
-if executable('rg')
-    let $FZF_DEFAULT_COMMAND = 'rg --files --hidden --follow --glob "!.git/*"'
-    set grepprg=rg\ --vimgrep
-    command! -bang -nargs=* Find call fzf#vim#grep('rg --column --line-number --no-heading --fixed-strings --ignore-case --hidden --follow --glob "!.git/*" --color "always" '.shellescape(<q-args>).'| tr -d "\017"', 1, <bang>0)
-endif
-
-cnoremap <C-P> <C-R>=expand("%:p:h") . "/" <CR>
-nnoremap <silent> <leader>b :Buffers<CR>
-nnoremap <silent> <leader>e :FZF -m<CR>
-
-" snippets
-let g:UltiSnipsExpandTrigger="<tab>"
-let g:UltiSnipsJumpForwardTrigger="<tab>"
-let g:UltiSnipsJumpBackwardTrigger="<c-b>"
-let g:UltiSnipsEditSplit="vertical"
 
 " Tagbar
 nmap <silent> <F4> :TagbarToggle<CR>
@@ -367,75 +414,8 @@ if has('macunix')
     vmap <C-c> :w !pbcopy<CR><CR>
 endif
 
-"" Buffer nav
-noremap <leader>z :bp<CR>
-noremap <leader>q :bp<CR>
-noremap <leader>x :bn<CR>
-noremap <leader>w :bn<CR>
-
-"" Close buffer
-noremap <leader>c :bd<CR>
-
-"" Clean search (highlight)
-nnoremap <silent> <leader><space> :noh<cr>
-
 "" Switching windows
 noremap <C-j> <C-w>j
 noremap <C-k> <C-w>k
 noremap <C-l> <C-w>l
 noremap <C-h> <C-w>h
-
-"" Vmap for maintain Visual Mode after shifting > and <
-vmap < <gv
-vmap > >gv
-
-"" Move visual block
-vnoremap J :m '>+1<CR>gv=gv
-vnoremap K :m '<-2<CR>gv=gv
-
-"" Open current line on GiHub
-nnoremap <Leader>o :.Gbrowse<CR>
-
-"*****************************************************************************
-"" Custom configs
-"*****************************************************************************
-
-" html
-" for html files, 2 spaces
-"autocmd Filetype html setlocal ts=2 sw=2 expandtab
-
-" python
-" vim-python
-augroup vimrc-python
-    autocmd!
-    autocmd FileType python setlocal expandtab shiftwidth=4 tabstop=8 colorcolumn=79
-                \ formatoptions+=croq softtabstop=4
-                \ cinwords=if,elif,else,for,while,try,except,finally,def,class,with
-augroup END
-
-" Syntax highlight
-" Default highlight is better than polyglot
-let g:polyglot_disabled = ['python']
-let python_highlight_all = 1
-
-"*****************************************************************************
-"*****************************************************************************
-
-"" Include user's local vim config
-if filereadable(expand("~/.config/nvim/local_init.vim"))
-    source ~/.config/nvim/local_init.vim
-endif
-
-"*****************************************************************************
-"" Convenience variables
-"*****************************************************************************
-let base16colorspace=256
-"
-" Asynchronous Lint Engine (ALE)
-" Limit linters used for JavaScript.
-
-let g:ale_fixers = {}
-let g:ale_fixers['javascript'] = ['prettier']
-
-let g:ale_fix_on_save = 1
-let g:ale_javascript_prettier_options = ' --jsx-bracket-same-line'
