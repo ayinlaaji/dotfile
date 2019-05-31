@@ -229,10 +229,7 @@ set fileencodings=utf-8
 set backspace=indent,eol,start
 
 "" Tabs. May be overriten by autocmd rules
-set expandtab
 set shiftwidth=4
-set softtabstop=0
-set tabstop=4
 
 "" Map leader to ,
 let g:mapleader=','
