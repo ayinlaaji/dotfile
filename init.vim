@@ -130,7 +130,7 @@ au InsertEnter * exec "inoremap <silent> " .     g:UltiSnipsJumpBackwardTrigger 
 
 " If you want :UltiSnipsEdit to split your window.
 let g:UltiSnipsEditSplit="vertical"
-let g:UltiSnipsSnippetDirectories = ['~/.vim/UltiSnips', 'UltiSnips']
+let g:UltiSnipsSnippetDirectories = ['/Users/ayinla/.vim/UltiSnips', 'UltiSnips']
 
 nnoremap <F5> :call LanguageClient_contextMenu()<CR>
 " Or map each action separately
