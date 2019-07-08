@@ -35,8 +35,9 @@ Plug 'honza/vim-snippets'
 Plug 'wakatime/vim-wakatime'
 
 "Theme
-Plug 'itchyny/lightline.vim'
-Plug 'sonph/onehalf', {'rtp': 'vim/'}
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+Plug 'altercation/vim-colors-solarized'
 
 "File search
 Plug 'scrooloose/nerdtree'
@@ -61,18 +62,12 @@ call plug#end()
 " ### Plugin conf ###
 " ###################
 
-let g:lightline = {
-      \ 'colorscheme': 'wombat',
-      \ 'active': {
-      \   'left': [ [ 'mode', 'paste' ],
-      \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
-      \ },
-      \ 'component_function': {
-      \   'gitbranch': 'fugitive#head'
-      \ },
-      \ }
-colorscheme onehalfdark
-let g:lightline.colorscheme='sublimetext'
+syntax enable
+set background=light
+colorscheme solarized
+let g:solarized_termcolors=256
+let g:airline_theme='solarized'
+let g:airline_powerline_fonts = 1
 
 " Prettier
 let g:prettier#autoformat = 0
@@ -155,15 +150,11 @@ let g:cssColorVimDoNotMessMyUpdatetime = 1
 "Terraform config
 let g:terraform_fmt_on_save=1
 
+set nocompatible
+filetype plugin indent on
 scriptencoding utf-8
 syntax on
-syntax enable
-filetype plugin indent on
 
-set nocompatible
-set background=light
-
-" let g:solarized_contrast ='high'
 set fillchars+=stl:\ ,stlnc:\
 set mouse=a
 set noshowmode
