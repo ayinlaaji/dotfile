@@ -136,7 +136,12 @@ nnoremap <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
 
 " Ctrl P
 let g:ctrlp_map = '<space><space>'
-let g:ctrlp_custom_ignore = 'node_modules\|DS_Store\|git\|build\|dist\|dist\|build\'
+let g:ctrlp_custom_ignore = {
+  \ 'dir':  '\v[\/]\.(git|hg|svn)$',
+  \ 'file': '\v\.(exe|so|dll|dmg)$',
+  \ }
+let g:ctrlp_working_path_mode='ra'
+let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files -co --exclude-standard']
 
 let g:cssColorVimDoNotMessMyUpdatetime = 1
 
