@@ -27,9 +27,6 @@ Plug 'google/vim-maktaba'
 Plug 'bazelbuild/vim-bazel'
 Plug 'google/vim-glaive'
 
-"Prettier"
-Plug 'prettier/vim-prettier', { 'do': 'yarn install' }
-
 "Snippets
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
