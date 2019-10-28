@@ -1,5 +1,8 @@
 call plug#begin('~/.vim/plugged')
 
+"Golang support
+Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+
 "Jsonnet
 Plug 'google/vim-jsonnet'
 
