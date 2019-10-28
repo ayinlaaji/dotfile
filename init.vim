@@ -42,6 +42,7 @@ Plug 'altercation/vim-colors-solarized'
 "File search
 Plug 'scrooloose/nerdtree'
 Plug 'ctrlpvim/ctrlp.vim'
+Plug 'Xuyuanp/nerdtree-git-plugin'
 
 "Git
 Plug 'tpope/vim-commentary'
